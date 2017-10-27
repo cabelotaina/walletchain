@@ -11,7 +11,7 @@ module.exports = function (contract, name) {
 		abiDefinitionwl = JSON.parse(compiledCodewl.contracts[namewl].interface)
 		wlContract = web3.eth.contract(abiDefinitionwl)
 		byteCode = compiledCodewl.contracts[namewl].bytecode
-		deployedContractwl = wlContract.new(5,{data: byteCode, from: web3.eth.accounts[0], gas: 4700000})
+		deployedContractwl = wlContract.new("mau", {data: byteCode, from: web3.eth.accounts[0], gas: 4700000})
 		contractInstancewl = wlContract.at(deployedContractwl.address)
 
 		var contractjc = 'job_contract.sol'; var namejc = ':JobContract';
@@ -21,6 +21,7 @@ module.exports = function (contract, name) {
 		byteCode = compiledCodejc.contracts[namejc].bytecode
 		deployedContractjc = jcContract.new(5,{data: byteCode, from: web3.eth.accounts[1], gas: 4700000})
 		contractInstancejc = jcContract.at(deployedContractjc.address)
+		// contractInstancejc.address
 
 	}
 

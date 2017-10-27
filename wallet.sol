@@ -1,37 +1,52 @@
 pragma solidity ^0.4.11;
 
 contract Wallet{
-	string private _owner;
-	string private _name;
-	string private _document;
-	string private _document_type;
-	string private _nationality;
+	address internal _owner = msg.sender;
+
+  string internal _email;
+	string internal _name;
+	string internal _document;
+	string internal _document_type;
+	string internal _nationality;
+	string internal _birthdate;
 
 
-	address[] contracts;
-	address[] pending_contracts;
+	address[] internal contracts;
+	address[] internal pending_contracts;
 
-	function Wallet(string owner, string name, string document, string document_type, string nationality){
-		_owner = owner;
+	function Wallet(string name){
+		// _email = email;
 		_name = name;
-		_document = document;
+		// _document = document;
+		// _document_type = document_type;
+		// _nationality = nationality;
+		// _birthdate = birthdate;
+	}
+
+
+	modifier onlyBy(address _account) {
+		require(msg.sender == _account);
+		_;
 	}
 
 	function addContract(address _contract) {
 		pending_contracts.push(_contract);
 	}
 
-	function getPendings() returns (address[]){
+	function getPendings() onlyBy(_owner) returns (address[]) {
 		return pending_contracts;
 	}
 
 	function promote_contract(address _contract) {
-		//if (owner == 	msg.sender) throw;
+		swap(_contract);
+	}
+
+	function swap(address _contract) internal{
 		for(uint i = 0; i < pending_contracts.length; i++) {
       if (_contract == pending_contracts[i]) {
         delete pending_contracts[i];
       }
     }
-    contracts.push(_contract);
+	  contracts.push(_contract);
 	}
 }
