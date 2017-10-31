@@ -14,13 +14,11 @@ contract Wallet{
 	address[] internal contracts;
 	address[] internal pending_contracts;
 
-	function Wallet(string name){
-		// _email = email;
+	function Wallet(string email, string name, string nationality, string birthdate){
+		_email = email;
 		_name = name;
-		// _document = document;
-		// _document_type = document_type;
-		// _nationality = nationality;
-		// _birthdate = birthdate;
+		_nationality = nationality;
+		_birthdate = birthdate;
 	}
 
 
@@ -37,7 +35,7 @@ contract Wallet{
 		return pending_contracts;
 	}
 
-	function promote_contract(address _contract) {
+	function promote_contract(address _contract) onlyBy(_owner) {
 		swap(_contract);
 	}
 

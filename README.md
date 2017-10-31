@@ -10,12 +10,16 @@ We use a smart contract example to maintain workers history.
 ## Settings
 
 ```Javascript
-		Web3 = require('web3')
+		Web3 = require('web3') // Ethereum JavaScript API
 
 		web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 
-		solc = require('solc')
+		solc = require('solc') // solidity compiler
+```
 
+Main commands for compile and set a smart contract. We need a function for this and a assert test.
+
+```Javascript
 		var contractwl = 'wallet.sol'; var namewl = ':Wallet';
 		compiledCodewl = solc.compile(fs.readFileSync(contractwl).toString())
 		abiDefinitionwl = JSON.parse(compiledCodewl.contracts[namewl].interface)
@@ -25,30 +29,19 @@ We use a smart contract example to maintain workers history.
 		contractInstancewl = wlContract.at(deployedContractwl.address)
 ```
 
-
 ## Command Lists
 
-
-If you need create a new transaction with blockchain you need pay a amount of gas and inform the account from this change.
+If you need create a new transaction with blockchain you need pay a amount of gas and inform the account (from: web3.eth.accounts[number]).
 
 ```Javascript
-contractInstancewl.addContract(0x5e49cf02472ec0356220ec27f2ba0494eb06298e4c2fa9d3db03cff7f6e6fee7,{from: web3.eth.accounts[0], gas:100000})
+	contractInstancewl.addContract(0x5e49cf02472ec0356220ec27f2ba0494eb06298e4c2fa9d3db03cff7f6e6fee7,{from: web3.eth.accounts[0], gas:100000})
 ```
 
-for make local test's for future transactions you need use .call
+To make local test's, before you make future transactions we use .call(parameters) 
 
 ```Javascript
 contractInstancewl.getPendings.call({from: web3.eth.accounts[0]});
 ```
-	// function promote_contract(address _contract) {
-	// 	swap(_contract);
-	// }
 
-	// function swap(address _contract) internal{
-	// 	for(uint i = 0; i < pending_contracts.length; i++) {
- //      if (_contract == pending_contracts[i]) {
- //        delete pending_contracts[i];
- //      }
- //    }
-	//   contracts.push(_contract);
-	// }
+
+TODO: survey about smart contract external security, use hash or symetric encryption for protect sensitive data, create generec example contracts to put on worker wallet.
