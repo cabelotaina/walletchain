@@ -1,11 +1,17 @@
 # Walletchain
 
-This project wants to create a simple job wallet for a worker.
+This project wants to create a simple job wallet for a universal worker.
 
 We use a smart contract example to maintain workers history.
 
-
 -- Everything that is inside a contract is visible to all external observers. Making something private only prevents other contracts from accessing and modifying the information, but it will still be visible to the whole world outside of the blockchain.
+
+// todo get this from the web link
+
+
+## start rpc
+
+node_modules/.bin/testrpc
 
 ## Settings
 
@@ -25,8 +31,24 @@ Main commands for compile and set a smart contract. We need a function for this 
 		abiDefinitionwl = JSON.parse(compiledCodewl.contracts[namewl].interface)
 		wlContract = web3.eth.contract(abiDefinitionwl)
 		byteCode = compiledCodewl.contracts[namewl].bytecode
-		deployedContractwl = wlContract.new("mau", {data: byteCode, from: web3.eth.accounts[0], gas: 4700000})
+		
+		// calculate the hash function
+		var sha256 = require('js-sha256');
+		var hash = sha256.hmac.create('key');
+		hash.update('Message to hash');
+		hash.hex();
+		
+		deployedContractwl = wlContract.new(hash.hex(), {data: byteCode, from: web3.eth.accounts[0], gas: 4700000})
 		contractInstancewl = wlContract.at(deployedContractwl.address)
+
+
+
+		var hash2 = sha256.hmac.create('key2');
+		hash2.update('Message to hash');
+
+		contractInstancewl.updateHashData(hash2.hex(), {from: web3.eth.accounts[0], gas:100000})
+
+		contractInstancewl.getHashData.call()
 ```
 
 ## Command Lists

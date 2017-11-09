@@ -3,24 +3,14 @@ pragma solidity ^0.4.11;
 contract Wallet{
 	address internal _owner = msg.sender;
 
-  string internal _email;
-	string internal _name;
-	string internal _document;
-	string internal _document_type;
-	string internal _nationality;
-	string internal _birthdate;
-
+  string internal _hash;
 
 	address[] internal contracts;
 	address[] internal pending_contracts;
 
-	function Wallet(string email, string name, string nationality, string birthdate){
-		_email = email;
-		_name = name;
-		_nationality = nationality;
-		_birthdate = birthdate;
+	function Wallet(string hash){
+		_hash = hash;
 	}
-
 
 	modifier onlyBy(address _account) {
 		require(msg.sender == _account);
@@ -37,6 +27,14 @@ contract Wallet{
 
 	function promote_contract(address _contract) onlyBy(_owner) {
 		swap(_contract);
+	}
+
+	function getHashData() returns (string) {
+		return _hash;
+	}
+
+	function updateHashData(string hash) onlyBy(_owner) {
+		_hash = hash;
 	}
 
 	function swap(address _contract) internal{
