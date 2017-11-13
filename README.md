@@ -8,7 +8,6 @@ Warning: From solidity documentation:
 
 -- Everything that is inside a contract is visible to all external observers. Making something private only prevents other contracts from accessing and modifying the information, but it will still be visible to the whole world outside of the blockchain.
 
-
 ## Settings
 
 Here we define some tools to set up our application. 
@@ -16,7 +15,7 @@ Here we define some tools to set up our application.
 ### Starting TestRPC
 
 ```sh
-  node_modules/.bin/testrpc
+	node_modules/.bin/testrpc
 ```
 
 ![TesteRPC](./rpc.png)
@@ -102,7 +101,7 @@ If you want to add a new pending contract on worker's wallet, you need to inform
 Now we have a new contract on pending array, we can see with this command:
 
 ```Javascript
-  contractInstancewl.getPendings.call({from: web3.eth.accounts[1]});
+	contractInstancewl.getPendings.call({from: web3.eth.accounts[1]});
 ```
 
 And finally, when the worker validate the contract, he can put it into his definitely contracts list.
