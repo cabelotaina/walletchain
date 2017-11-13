@@ -94,19 +94,28 @@ Like the wallet creation, we need a simple contract, created by a company.
 If you want to add a new pending contract on worker's wallet, you need to inform the contract address when you submit into the worker's wallet, the company account, and pay some gas.
 
 ```Javascript
-	address = '0x5e49cf02472ec0356220ec27f2ba0494eb06298e4c2fa9d3db03cff7f6e6fee7';
-	contractInstancewl.addContract(address,{from: web3.eth.accounts[1], gas:100000})
+	contractInstancewl.addContract(deployedContractjc.address,{from: web3.eth.accounts[1], gas:100000})
 ```
 
 Now we have a new contract on pending array, we can see with this command:
 
 ```Javascript
+	// try to view contract pendings with another user
 	contractInstancewl.getPendings.call({from: web3.eth.accounts[1]});
+	// with the owner
+	contractInstancewl.getPendings.call({from: web3.eth.accounts[0]});
 ```
 
 And finally, when the worker validate the contract, he can put it into his definitely contracts list.
 
 ```Javascript
-	address = '0x5e49cf02472ec0356220ec27f2ba0494eb06298e4c2fa9d3db03cff7f6e6fee7';
-	contractInstancewl.promoteContract(address,{from: web3.eth.accounts[0], gas:100000})
+	contractInstancewl.promoteContract(deployedContractjc.address, {from: web3.eth.accounts[0], gas:100000});
 ```
+
+Show contract on contract's array:
+
+```Javascript
+	// all people have access to contract's array
+	contractInstancewl.getContracts.call({from: web3.eth.accounts[1]});
+```
+

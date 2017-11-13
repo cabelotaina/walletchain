@@ -21,10 +21,5 @@ module.exports = function (contract, name) {
 		byteCode = compiledCodejc.contracts[namejc].bytecode
 		deployedContractjc = jcContract.new(5,{data: byteCode, from: web3.eth.accounts[1], gas: 4700000})
 		contractInstancejc = jcContract.at(deployedContractjc.address)
-		// contractInstancejc.address
 
 	}
-
-// var contract = 'job_contract.sol'; var name = ':jobContract';
-
-// contractInstancejc.enter.call()
