@@ -10,7 +10,7 @@ contract Time {
 	uint internal _checkin;
 	uint internal _checkout;
 
-	function Time(address worker, address machine) payable {
+	function Time(address worker, address machine) {
 		_worker = worker;
 		_machine = machine;
 		_amount = msg.value;
@@ -26,12 +26,9 @@ contract Time {
 		_checkout = _checkout + 1;
 	}
 
-  function withdraw() onlyBy(_worker) {
-  	// uint sum = _checkin + _checkout
-  	// if( sum == 2) revert();
-  	uint aux = _amount;
-  	_amount = 0;
-  	_owner.transfer(_amount);
+  function isJobDone() onlyBy(_worker) returns (bool) {
+  	bool done = _checkout + _checkin == 60;
+  	return done
   }
 
   modifier onlyBy(address _account) {

@@ -25,7 +25,7 @@ contract Wallet{
 		return pending_contracts;
 	}
 
-	function promote_contract(address _contract) onlyBy(_owner) {
+	function promoteContract(address _contract) onlyBy(_owner) {
 		swap(_contract);
 	}
 
