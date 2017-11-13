@@ -28,11 +28,11 @@ Here we define some tools to set up our application.
 To interact with it, we add Web3 module, an Ethereum JavaScript API and solc, a solidity compiler. This allows us to make a fake ethereum environment. 
 
 ```Javascript
-		Web3 = require('web3')
+	Web3 = require('web3')
 
-		web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+	web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 
-		solc = require('solc')
+	solc = require('solc')
 ```
 
 ### Creating your Wallet
@@ -40,41 +40,41 @@ To interact with it, we add Web3 module, an Ethereum JavaScript API and solc, a 
 Main commands for compile and set a smart contract.
 
 ```Javascript
-		var contractwl = 'wallet.sol'; var namewl = ':Wallet';
-		compiledCodewl = solc.compile(fs.readFileSync(contractwl).toString())
-		abiDefinitionwl = JSON.parse(compiledCodewl.contracts[namewl].interface)
-		wlContract = web3.eth.contract(abiDefinitionwl)
-		byteCode = compiledCodewl.contracts[namewl].bytecode		
+	var contractwl = 'wallet.sol'; var namewl = ':Wallet';
+	compiledCodewl = solc.compile(fs.readFileSync(contractwl).toString())
+	abiDefinitionwl = JSON.parse(compiledCodewl.contracts[namewl].interface)
+	wlContract = web3.eth.contract(abiDefinitionwl)
+	byteCode = compiledCodewl.contracts[namewl].bytecode		
 ```
 
 To keep the worker information safe, we took js-sha256, another nodejs module, and hash the data, to attach into his wallet.
 
 ```Javascript
-		// calculate the hash function
-		var sha256 = require('js-sha256');
-		var hash = sha256.hmac.create('123890');
-		var info = { name: "Luis Antonio", rg:"4678990", cpf: "45789076544" }
-		hash.update(JSON.stringify(info));
+	// calculate the hash function
+	var sha256 = require('js-sha256');
+	var hash = sha256.hmac.create('123890');
+	var info = { name: "Luis Antonio", rg:"4678990", cpf: "45789076544" }
+	hash.update(JSON.stringify(info));
 ```
 
 Now we make the contract deploy on testRPC. When you make your deploy, we have to spend some gas, to maintain the Ethereum Virtual Machine.
 
 ```Javascript
-		deployedContractwl = wlContract.new(hash.hex(), {data: byteCode, from: web3.eth.accounts[0], gas: 4700000})
-		contractInstancewl = wlContract.at(deployedContractwl.address)
+	deployedContractwl = wlContract.new(hash.hex(), {data: byteCode, from: web3.eth.accounts[0], gas: 4700000})
+	contractInstancewl = wlContract.at(deployedContractwl.address)
 ```
 
 In the next step, we show the possibility to update our worker information in his wallet, if the worker wants to.
 
 ```Javascript
-		info.email = "luiz.antonio@gmail.com";
+	info.email = "luiz.antonio@gmail.com";
 
-		var hash2 = sha256.hmac.create('456987');
-		hash2.update(JSON.stringify(info));
+	var hash2 = sha256.hmac.create('456987');
+	hash2.update(JSON.stringify(info));
 
-		contractInstancewl.updateHashData(hash2.hex(), {from: web3.eth.accounts[0], gas:100000})
+	contractInstancewl.updateHashData(hash2.hex(), {from: web3.eth.accounts[0], gas:100000})
 
-		contractInstancewl.getHashData.call()
+	contractInstancewl.getHashData.call()
 ```
 
 ## Putting a new contract on the Wallet
@@ -82,13 +82,13 @@ In the next step, we show the possibility to update our worker information in hi
 Like the wallet creation, we need a simple contract, created by a company. 
 
 ```Javascript
-		var contractjc = 'job_contract.sol'; var namejc = ':JobContract';
-		compiledCodejc = solc.compile(fs.readFileSync(contractjc).toString())
-		abiDefinitionjc = JSON.parse(compiledCodejc.contracts[namejc].interface)
-		jcContract = web3.eth.contract(abiDefinitionjc)
-		byteCode = compiledCodejc.contracts[namejc].bytecode
-		deployedContractjc = jcContract.new(5,{data: byteCode, from: web3.eth.accounts[1], gas: 4700000})
-		contractInstancejc = jcContract.at(deployedContractjc.address)
+	var contractjc = 'job_contract.sol'; var namejc = ':JobContract';
+	compiledCodejc = solc.compile(fs.readFileSync(contractjc).toString())
+	abiDefinitionjc = JSON.parse(compiledCodejc.contracts[namejc].interface)
+	jcContract = web3.eth.contract(abiDefinitionjc)
+	byteCode = compiledCodejc.contracts[namejc].bytecode
+	deployedContractjc = jcContract.new(5,{data: byteCode, from: web3.eth.accounts[1], gas: 4700000})
+	contractInstancejc = jcContract.at(deployedContractjc.address)
 
 ```
 
@@ -102,7 +102,7 @@ If you want to add a new pending contract on worker's wallet, you need to inform
 Now we have a new contract on pending array, we can see with this command:
 
 ```Javascript
-contractInstancewl.getPendings.call({from: web3.eth.accounts[1]});
+  contractInstancewl.getPendings.call({from: web3.eth.accounts[1]});
 ```
 
 And finally, when the worker validate the contract, he can put it into his definitely contracts list.
