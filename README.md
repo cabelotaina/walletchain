@@ -9,15 +9,23 @@ Warning: From solidity documentation:
 -- Everything that is inside a contract is visible to all external observers. Making something private only prevents other contracts from accessing and modifying the information, but it will still be visible to the whole world outside of the blockchain.
 
 
-## Start rpc
+## Settings
 
-node_modules/.bin/testrpc
+Here we define some tools to set up our application. 
+
+### Starting TestRPC
+
+```sh
+  node_modules/.bin/testrpc
+```
 
 ![TesteRPC](./rpc.png)
 
-## Settings
+	testrpc is a in-memory blockchain for test purpose.
 
-For test purpose, we started with Web3, an Ethereum JavaScript API and solc, a solidity compiler. And finally, use testrpc to maintain a 
+### Modules  
+
+To interact with it, we add Web3 module, an Ethereum JavaScript API and solc, a solidity compiler. This allows us to make a fake ethereum environment. 
 
 ```Javascript
 		Web3 = require('web3')
@@ -27,35 +35,51 @@ For test purpose, we started with Web3, an Ethereum JavaScript API and solc, a s
 		solc = require('solc')
 ```
 
-Main commands for compile and set a smart contract. We need a function for this and a assert test, and we add our worker wallet with this few commands.
+### Creating your Wallet
+
+Main commands for compile and set a smart contract.
 
 ```Javascript
 		var contractwl = 'wallet.sol'; var namewl = ':Wallet';
 		compiledCodewl = solc.compile(fs.readFileSync(contractwl).toString())
 		abiDefinitionwl = JSON.parse(compiledCodewl.contracts[namewl].interface)
 		wlContract = web3.eth.contract(abiDefinitionwl)
-		byteCode = compiledCodewl.contracts[namewl].bytecode
-		
+		byteCode = compiledCodewl.contracts[namewl].bytecode		
+```
+
+To keep the worker information safe, we took js-sha256, another nodejs module, and hash the data, to attach into his wallet.
+
+```Javascript
 		// calculate the hash function
 		var sha256 = require('js-sha256');
-		var hash = sha256.hmac.create('key');
-		hash.update('Message to hash');
-		hash.hex();
-		
+		var hash = sha256.hmac.create('123890');
+		var info = { name: "Luis Antonio", rg:"4678990", cpf: "45789076544" }
+		hash.update(JSON.stringify(info));
+```
+
+Now we make the contract deploy on testRPC. When you make your deploy, we have to spend some gas, to maintain the Ethereum Virtual Machine.
+
+```Javascript
 		deployedContractwl = wlContract.new(hash.hex(), {data: byteCode, from: web3.eth.accounts[0], gas: 4700000})
 		contractInstancewl = wlContract.at(deployedContractwl.address)
+```
 
-		var hash2 = sha256.hmac.create('key2');
-		hash2.update('Message to hash');
+In the next step, we show the possibility to update our worker information in his wallet, if the worker wants to.
+
+```Javascript
+		info.email = "luiz.antonio@gmail.com";
+
+		var hash2 = sha256.hmac.create('456987');
+		hash2.update(JSON.stringify(info));
 
 		contractInstancewl.updateHashData(hash2.hex(), {from: web3.eth.accounts[0], gas:100000})
 
 		contractInstancewl.getHashData.call()
 ```
 
-## Command Lists
+## Putting a new contract on the Wallet
 
-For our example we need a simple contract. 
+Like the wallet creation, we need a simple contract, created by a company. 
 
 ```Javascript
 		var contractjc = 'job_contract.sol'; var namejc = ':JobContract';
@@ -68,20 +92,20 @@ For our example we need a simple contract.
 
 ```
 
-If you want to add a new pending contract on worker's wallet, you need add this contract on worker wallet, for this inform the address of contract, your account (we use test rpc defaut account e.g. from: web3.eth.accounts[number]), and pay a amount of gas.
+If you want to add a new pending contract on worker's wallet, you need to inform the contract address when you submit into the worker's wallet, the company account, and pay some gas.
 
 ```Javascript
 	address = '0x5e49cf02472ec0356220ec27f2ba0494eb06298e4c2fa9d3db03cff7f6e6fee7';
 	contractInstancewl.addContract(address,{from: web3.eth.accounts[1], gas:100000})
 ```
 
-Now we have a new contract on pending array. How we see with this command:
+Now we have a new contract on pending array, we can see with this command:
 
 ```Javascript
 contractInstancewl.getPendings.call({from: web3.eth.accounts[1]});
 ```
 
-In the next step the worker swap the contract for your contract's list:
+And finally, when the worker validate the contract, he can put it into his definitely contracts list.
 
 ```Javascript
 	address = '0x5e49cf02472ec0356220ec27f2ba0494eb06298e4c2fa9d3db03cff7f6e6fee7';
